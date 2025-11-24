@@ -19,7 +19,7 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" data-testid="link-home">
+          <Link href="/" data-testid="link-logo">
             <div className="flex items-center gap-2 hover-elevate cursor-pointer p-2 rounded-lg">
               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-primary to-chart-2 flex items-center justify-center">
                 <Cloud className="w-5 h-5 md:w-6 md:h-6 text-primary-foreground" />
