@@ -82,15 +82,67 @@ export default async function runApp(
   await setup(app, server);
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
+  // Default to 5000 if not specified.
   const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
+
+  // Prefer a HOST env var; on Windows default to localhost (127.0.0.1)
+  const requestedHost = process.env.HOST || '127.0.0.1';
+
+  // Allow opt-in reusePort if explicitly set to "true"
+  const reusePort = String(process.env.REUSE_PORT || "false").toLowerCase() === "true";
+
+  const listenOpts = {
     port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+    host: requestedHost,
+    reusePort,
+  } as any;
+
+  // Attach an error handler BEFORE calling listen so we can attempt a fallback.
+  server.on('error', (err: any) => {
+    log(`Server error event: ${err?.code || err}`, 'server');
+
+    // If binding to the requested host isn't supported, try localhost as a fallback
+    if ((err && (err.code === 'ENOTSUP' || err.code === 'EADDRNOTAVAIL')) && requestedHost !== '127.0.0.1') {
+      log(`Binding to ${requestedHost}:${port} failed (${err.code}). Attempting fallback to 127.0.0.1:${port}`, 'server');
+
+      // Wait a tick then try again on localhost. If the server is already closed this will start it fresh.
+      setTimeout(() => {
+        try {
+          server.listen({ port, host: '127.0.0.1', reusePort: false }, () => {
+            log(`Fallback: server running at http://127.0.0.1:${port}`, 'server');
+          });
+        } catch (innerErr) {
+          log(`Fallback listen failed: ${innerErr}`, 'server');
+          // If fallback also fails, exit with a useful message.
+          process.exitCode = 1;
+        }
+      }, 50);
+
+      return;
+    }
+
+    // For other errors, rethrow so they aren't swallowed.
+    log(`Unhandled server error: ${err?.stack || err}`, 'server');
+    process.exitCode = 1;
   });
+
+  // Try to listen with the requested options
+  try {
+    server.listen(listenOpts, () => {
+      log(`serving on port ${port} (host=${listenOpts.host}, reusePort=${listenOpts.reusePort})`, 'server');
+    });
+  } catch (err: any) {
+    // Some platforms / Node versions can throw synchronously — handle that as well.
+    log(`Listen threw synchronously: ${err?.message || err}`, 'server');
+
+    // Attempt immediate fallback to 127.0.0.1
+    try {
+      server.listen({ port, host: '127.0.0.1', reusePort: false }, () => {
+        log(`Fallback (sync): server running at http://127.0.0.1:${port}`, 'server');
+      });
+    } catch (innerErr) {
+      log(`Fallback (sync) failed: ${innerErr}`, 'server');
+      process.exitCode = 1;
+    }
+  }
 }

@@ -2,5 +2,11 @@ node_modules
 dist
 .DS_Store
 server/public
+server/ml_models/linear_regression_metrics.pkl
+server/ml_models/linear_regression_model.pkl
+server/ml_models/logistic_cloud_model.pkl
+server/ml_models/logistic_confusion.pkl
+server/ml_models/logistic_metrics.pkl
+server/ml_models/logistic_rain_model.pkl
 vite.config.ts.*
 *.tar.gz

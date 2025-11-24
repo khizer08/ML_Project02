@@ -1,3 +1,10 @@
+import 'dotenv/config';
+
+
+// Ensure sensible defaults on Windows
+process.env.HOST = process.env.HOST || '127.0.0.1';
+process.env.PORT = process.env.PORT || '5000';
+
 import fs from "node:fs";
 import path from "node:path";
 import { type Server } from "node:http";
@@ -58,6 +65,12 @@ export async function setupVite(app: Express, server: Server) {
   });
 }
 
+// run the app and fail loudly (with a helpful message) if anything goes wrong
 (async () => {
-  await runApp(setupVite);
+  try {
+    await runApp(setupVite);
+  } catch (err) {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  }
 })();
