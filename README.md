@@ -1,5 +1,6 @@
 # 1. activate environment for python 
 python -m venv .venv #only one time
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 .\.venv\Scripts\Activate.ps1
 
 # 2. requirment of project
