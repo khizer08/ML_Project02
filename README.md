@@ -23,6 +23,6 @@ $env:OPENWEATHER_API_KEY = (Get-Content .\server\.env | Where-Object { $_ -match
 $env:HOST = "127.0.0.1"
 $env:PORT = "5000"
 
-# 6
+# 6. run backend
 cd .\server
 npm run dev
