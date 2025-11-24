@@ -1,4 +1,5 @@
-# 1. activate environment for python  
+# 1. activate environment for python 
+python -m venv .venv #only one time
 .\.venv\Scripts\Activate.ps1
 
 # 2. requirment of project
