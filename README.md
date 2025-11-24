@@ -14,14 +14,14 @@ python train_linear_regression.py
 
 python predict.py
 
-# 4. match the api_key and the port given
-cd "C:\Users\Syed khizer\OneDrive\Desktop\WeatherWisdom"
-.\.venv\Scripts\Activate.ps1
+# 4. node dependencies
+npm i tsx --save-dev
 
 # 5. ensure the env vars are loaded into this shell
 $env:OPENWEATHER_API_KEY = (Get-Content .\server\.env | Where-Object { $_ -match '^OPENWEATHER_API_KEY=' } | ForEach-Object { $_ -replace '^OPENWEATHER_API_KEY=', '' }).Trim()
 $env:HOST = "127.0.0.1"
 $env:PORT = "5000"
 
+# 6
 cd .\server
 npm run dev
