@@ -13,7 +13,7 @@ python train_linear_regression.py
 
 python predict.py
 
-# 4. node dependencies
+# 4. come back to project folder (node dependencies)
 npm i tsx --save-dev
 
 # 5. ensure the env vars are loaded into this shell
