@@ -12,18 +12,17 @@ pip install joblib numpy pandas scikit-learn
 python train_logistic_regression.py
 python train_linear_regression.py
 
-python predict.py
-
 # 4. come back to project folder (node dependencies)
 npm i
 npm i tsx --save-dev
 
 # 5. ensure the env vars are loaded into this shell
+cd server
+
 $env:OPENWEATHER_API_KEY = (Get-Content .\.env | Where-Object { $_ -match '^OPENWEATHER_API_KEY=' } | ForEach-Object { $_ -replace '^OPENWEATHER_API_KEY=', '' }).Trim()
 $env:HOST = "127.0.0.1"
 $env:PORT = "5000"
 
 
 # 6. run backend
-cd .\server
 npm run dev
