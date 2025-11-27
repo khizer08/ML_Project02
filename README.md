@@ -19,9 +19,10 @@ npm i
 npm i tsx --save-dev
 
 # 5. ensure the env vars are loaded into this shell
-$env:OPENWEATHER_API_KEY = (Get-Content .\server\.env | Where-Object { $_ -match '^OPENWEATHER_API_KEY=' } | ForEach-Object { $_ -replace '^OPENWEATHER_API_KEY=', '' }).Trim()
+$env:OPENWEATHER_API_KEY = (Get-Content .\.env | Where-Object { $_ -match '^OPENWEATHER_API_KEY=' } | ForEach-Object { $_ -replace '^OPENWEATHER_API_KEY=', '' }).Trim()
 $env:HOST = "127.0.0.1"
 $env:PORT = "5000"
+
 
 # 6. run backend
 cd .\server
